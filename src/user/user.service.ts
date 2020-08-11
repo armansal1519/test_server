@@ -12,17 +12,32 @@ export class UserService {
     this.userCol= arango.getCol('users')
   }
 
-  getUser() {
-    return this.arango.getAll(this.userCol);
+  async getUser() {
+    const internalUser = await this.arango.getAll(this.userCol);
+
+    const users = internalUser.map(item=>{
+      console.log(item);
+        delete item.hashPass
+      return item
+    })
+    return users
   }
 
-  getUserByKey(key) {
-    return this.arango.getByKey(this.userCol, key);
+  async getUserByKey(key) {
+    console.log(key);
+    const internalUser = await this.arango.getByKey(this.userCol, key);
+    // console.log(internalUser);
+    const users = internalUser.map(item=>{
+      console.log(item);
+      delete item.hashPass
+      return item
+    })
+    return users
   }
 
 
 
-  updateUser(data: ProductDto, key: string) {
+  updateUser(data, key: string) {
     return this.arango.update(this.userCol, data, key);
   }
 

@@ -34,12 +34,12 @@ export class ProductController {
     return this.productService.createProduct(data);
   }
 
-  @Put(':key')
+  @Put('/:key')
   put(@Body() data: ProductDto, @Param('key') key) {
     return this.productService.updateProduct(data, key);
   }
 
-  @Delete(':key')
+  @Delete('/:key')
   delete(@Param('key') key) {
     return this.productService.deleteProduct(key);
   }

@@ -90,6 +90,7 @@ export class Arango {
     const query = aql`for i in ${col} 
      filter i._key==${_key}
      return i`;
+
     let cursor;
     try {
       cursor = await this._db.query(query);

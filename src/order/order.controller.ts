@@ -5,10 +5,13 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderDto } from './order.dto';
+import { AccessGuard } from '../user-auth/access.guard';
+
+@UseGuards(AccessGuard)
 
 @Controller('order')
 export class OrderController {
