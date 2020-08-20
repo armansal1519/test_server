@@ -12,14 +12,14 @@ import { ProductService } from './product.service';
 import { ProductDto } from './product.dto';
 import { AccessGuard } from '../user-auth/access.guard';
 import { Access } from '../utils/auth/access.decorator';
-
 @UseGuards(AccessGuard)
+
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
+  @Access('handler')
   @Get()
-  @Access('user')
   get() {
     return this.productService.getProduct();
   }
@@ -28,7 +28,6 @@ export class ProductController {
   getByKey(@Param('key') key) {
     return this.productService.getProductByKey(key);
   }
-
   @Post()
   post(@Body() data: ProductDto) {
     return this.productService.createProduct(data);

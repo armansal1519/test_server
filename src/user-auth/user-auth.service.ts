@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Arango } from '../arango/Arango';
 import { HttpClass } from './http';
 import * as jwt from 'jsonwebtoken';
@@ -94,7 +99,6 @@ remove t in tempUsers`;
 
   async login(phoneNumber, pass) {
     const user = await this.validateUser(phoneNumber, pass);
-    console.log('79', user);
 
     if (!user) {
       throw new UnauthorizedException(
@@ -108,8 +112,10 @@ remove t in tempUsers`;
     const accessToken = this.createAccessToken(payload);
 
     return {
+      user: user,
       accessToken: accessToken,
       expiresIn: '2h',
+      authTime:new Date( new Date().getTime()+(2*60*60*1000))
     };
   }
 
@@ -129,22 +135,21 @@ remove t in tempUsers`;
     return null;
   }
 
-  async forgotPassword(phoneNumber){
-    const validationCode= this.generateValidationCode()
-    let user
+  async forgotPassword(phoneNumber) {
+    const validationCode = this.generateValidationCode();
+    let user;
     await this.arango.phoneNumberBeUnique(this.forgotPasswordCol, phoneNumber);
     try {
-      user=await this.arango.getByPhoneNumber(this.userCol,phoneNumber)
-
-    }catch (e) {
-      throw new NotFoundException(`phone number didnt register`)
+      user = await this.arango.getByPhoneNumber(this.userCol, phoneNumber);
+    } catch (e) {
+      throw new NotFoundException(`phone number didnt register`);
     }
-    const data={
+    const data = {
       phoneNumber,
-      validationCode
-    }
-    await this.sendValidCode(phoneNumber,validationCode)
-    await this.arango.create(this.forgotPasswordCol,data)
+      validationCode,
+    };
+    await this.sendValidCode(phoneNumber, validationCode);
+    await this.arango.create(this.forgotPasswordCol, data);
 
     const query = aql`for t in forgotPassword
 filter t.phoneNumber==${phoneNumber}
@@ -154,20 +159,30 @@ remove t in forgotPassword`;
       that.arango.executeEmptyQuery(query);
     }, 2 * 60 * 1000);
 
-    return phoneNumber
+    return phoneNumber;
   }
 
-  async resetPassword(phoneNumber,code){
-    const u= await this.arango.getByPhoneNumber(this.forgotPasswordCol,phoneNumber)
+  async resetPassword(phoneNumber, code) {
+    const u = await this.arango.getByPhoneNumber(
+      this.forgotPasswordCol,
+      phoneNumber,
+    );
 
-    if (u[0].validationCode===code){
-      const newHashPassword= await argon2.hash(code)
-      const user=await this.arango.getByPhoneNumber(this.userCol,phoneNumber)
+    if (u[0].validationCode === code) {
+      const newHashPassword = await argon2.hash(code);
+      const user = await this.arango.getByPhoneNumber(
+        this.userCol,
+        phoneNumber,
+      );
       console.log(user);
-      const key=user[0]._key
-      return this.arango.update(this.userCol,{hashPass:newHashPassword},key)
+      const key = user[0]._key;
+      return this.arango.update(
+        this.userCol,
+        { hashPass: newHashPassword },
+        key,
+      );
     }
-    throw new ConflictException()
+    throw new ConflictException();
   }
 
   createAccessToken(payload) {

@@ -4,38 +4,39 @@ import { ProductDto } from '../product/product.dto';
 
 @Injectable()
 export class UserService {
-
   userCol;
-  constructor(
-    private arango:Arango
-  ) {
-    this.userCol= arango.getCol('users')
+  constructor(private arango: Arango) {
+    this.userCol = arango.getCol('users');
   }
 
   async getUser() {
     const internalUser = await this.arango.getAll(this.userCol);
 
-    const users = internalUser.map(item=>{
+    const users = internalUser.map(item => {
       console.log(item);
-        delete item.hashPass
-      return item
-    })
-    return users
+      delete item.hashPass;
+      return item;
+    });
+    return users;
+  }
+  async getUserByPhoneNumber(phoneNumber){
+    return await this.arango.getByPhoneNumber(this.userCol,phoneNumber)
   }
 
   async getUserByKey(key) {
     console.log(key);
     const internalUser = await this.arango.getByKey(this.userCol, key);
     // console.log(internalUser);
-    const users = internalUser.map(item=>{
+    const users = internalUser.map(item => {
       console.log(item);
-      delete item.hashPass
-      return item
-    })
-    return users
+      delete item.hashPass;
+      return item;
+    });
+    return users;
   }
-
-
+  async createUser(data){
+    await this.arango.create(this.userCol,data)
+  }
 
   updateUser(data, key: string) {
     return this.arango.update(this.userCol, data, key);

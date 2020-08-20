@@ -8,19 +8,19 @@ export class AddToMenuService {
   col;
 
   constructor(private arango: Arango) {
-    this.col = arango.getCol('products');
+    this.col = arango.getCol('menu');
   }
 
   async addCompanyNameToMenuList(data) {
-    const { companyName } = data;
+    const { name, value } = data;
 
     const query = `
           for m in menu
-            let current= m.companyName
-            let n= push(current,${companyName})
-            update m with {companyName:n} in menu
+            let current= m.${name}
+            let n= push(current,"${value}")
+            update m with {${name}:n} in menu
         `;
 
-    await this.arango.executeEmptyQuery(query);
+    return await this.arango.executeEmptyQuery(query);
   }
 }

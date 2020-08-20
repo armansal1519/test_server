@@ -5,6 +5,7 @@ import { Arango } from '../arango/Arango';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService,Arango]
+  providers: [UserService, Arango],
+  exports:[UserService]
 })
 export class UserModule {}
