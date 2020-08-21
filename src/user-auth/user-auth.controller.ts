@@ -24,14 +24,14 @@ export class UserAuthController {
   }
 
   @Post('forgot-password')
-  forgotPassword(@Body() data){
-    const {phoneNumber}=data
-    return this.userAuthService.forgotPassword(phoneNumber)
+  forgotPassword(@Body() data) {
+    const { phoneNumber } = data;
+    return this.userAuthService.forgotPassword(phoneNumber);
   }
 
   @Post('reset-password')
-  resetPassword(@Body()data){
-    const {phoneNumber,code}=data
-    return this.userAuthService.resetPassword(phoneNumber,code)
+  resetPassword(@Body() data) {
+    const { phoneNumber, code } = data;
+    return this.userAuthService.resetPassword(phoneNumber, code);
   }
 }

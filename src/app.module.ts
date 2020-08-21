@@ -6,7 +6,13 @@ import { AddToMenuModule } from './add-to-menu/add-to-menu.module';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [OrderModule, ProductModule, UserAuthModule, AddToMenuModule, UserModule],
+  imports: [
+    OrderModule,
+    ProductModule,
+    UserAuthModule,
+    AddToMenuModule,
+    UserModule,
+  ],
   controllers: [],
   providers: [],
 })

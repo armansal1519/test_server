@@ -9,9 +9,11 @@ export class Arango {
   private _db;
 
   constructor() {
-    this._db = new Database();
+    this._db = new Database({
+      url:'http://185.239.107.17:8529'
+    });
     this._db.useDatabase('bamachoob-v1');
-    this._db.useBasicAuth('root', 'test1234');
+    this._db.useBasicAuth('root', 'datafor?me');
   }
 
   getDB() {
