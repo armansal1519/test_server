@@ -19,6 +19,9 @@ export class UserService {
     });
     return users;
   }
+  async getUserByPhoneNumber(phoneNumber) {
+    return await this.arango.getByPhoneNumber(this.userCol, phoneNumber);
+  }
 
   async getUserByKey(key) {
     console.log(key);
@@ -30,6 +33,9 @@ export class UserService {
       return item;
     });
     return users;
+  }
+  async createUser(data) {
+    await this.arango.create(this.userCol, data);
   }
 
   updateUser(data, key: string) {

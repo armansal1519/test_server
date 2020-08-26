@@ -19,7 +19,39 @@ export class ProductService {
   }
 
   createProduct(data: ProductDto) {
-    return this.arango.create(this.col, data);
+    const { status } = data;
+    let normalStatus;
+    if (status == 'قابل مشاهده برای انبار ها') {
+      normalStatus = true;
+    } else {
+      normalStatus = false;
+    }
+
+    for (let i = 0; i < data.coverSelect.length; i++) {
+      for (let j = 0; j < data.sheetSelect.length; j++) {
+        for (let k = 0; k < data.dimensionsSelect.length; k++) {
+          for (let l = 0; l < data.thicknessSelect.length; l++) {
+            const expandData = {
+              company: data.company,
+              coverType: data.coverSelect[i],
+              sheetType: data.sheetSelect[j],
+              dimension: data.dimensionsSelect[k],
+              thickness: data.thicknessSelect[l],
+              sheetCountry: data.sheetCountry,
+              coverCountry: data.coverCountry,
+              code: data.code,
+              name: data.name,
+              color: data.name,
+              quality: data.quality,
+              status: normalStatus,
+              imageUrl: data.imageUrl,
+            };
+            this.arango.create(this.col,expandData)
+          }
+
+        }
+      }
+    }
   }
 
   updateProduct(data: ProductDto, key: string) {

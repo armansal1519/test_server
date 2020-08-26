@@ -99,7 +99,6 @@ remove t in tempUsers`;
 
   async login(phoneNumber, pass) {
     const user = await this.validateUser(phoneNumber, pass);
-    console.log('79', user);
 
     if (!user) {
       throw new UnauthorizedException(
@@ -113,8 +112,10 @@ remove t in tempUsers`;
     const accessToken = this.createAccessToken(payload);
 
     return {
+      user: user,
       accessToken: accessToken,
       expiresIn: '2h',
+      authTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000),
     };
   }
 

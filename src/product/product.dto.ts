@@ -1,24 +1,32 @@
-import { IsNotEmpty } from 'class-validator';
+import {  IsNotEmpty } from 'class-validator';
 
 export class ProductDto {
   @IsNotEmpty()
-  name: string;
-
+  company: string
   @IsNotEmpty()
-  desc: string;
-
+  coverSelect: string[]
   @IsNotEmpty()
-  picUrl: string;
-
+  sheetSelect: string[]
   @IsNotEmpty()
-  numberInStock: number;
-
+  dimensionsSelect: string[]
   @IsNotEmpty()
-  price: number;
-
+  thicknessSelect: string[]
   @IsNotEmpty()
-  brand: string;
-
+  sheetCountry: string
   @IsNotEmpty()
-  categories: [string];
+  coverCountry: string
+  @IsNotEmpty()
+  code: string
+  @IsNotEmpty()
+  name: string
+  color: string
+  @IsNotEmpty()
+  quality: string
+  @IsNotEmpty()
+  status: string
+  @IsNotEmpty()
+  imageUrl: string[]
+  @IsNotEmpty()
+  sideSheetType: string[]
+
 }

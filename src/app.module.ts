@@ -4,6 +4,9 @@ import { ProductModule } from './product/product.module';
 import { UserAuthModule } from './user-auth/user-auth.module';
 import { AddToMenuModule } from './add-to-menu/add-to-menu.module';
 import { UserModule } from './user/user.module';
+import { HandlerAuthModule } from './handler-auth/handler-auth.module';
+import { UploadImageModule } from './upload-image/upload-image.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -12,6 +15,10 @@ import { UserModule } from './user/user.module';
     UserAuthModule,
     AddToMenuModule,
     UserModule,
+
+    HandlerAuthModule,
+    UploadImageModule,
+    CompanyModule,
   ],
   controllers: [],
   providers: [],
