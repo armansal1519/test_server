@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { HandlerAuthModule } from './handler-auth/handler-auth.module';
 import { UploadImageModule } from './upload-image/upload-image.module';
 import { CompanyModule } from './company/company.module';
+import { TicketModule } from './ticket/ticket.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CompanyModule } from './company/company.module';
     HandlerAuthModule,
     UploadImageModule,
     CompanyModule,
+    TicketModule,
   ],
   controllers: [],
   providers: [],

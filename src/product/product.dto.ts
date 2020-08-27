@@ -19,7 +19,8 @@ export class ProductDto {
   code: string
   @IsNotEmpty()
   name: string
-  color: string
+  @IsNotEmpty()
+  numberInPalet: string
   @IsNotEmpty()
   quality: string
   @IsNotEmpty()
