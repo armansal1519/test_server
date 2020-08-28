@@ -41,7 +41,7 @@ export class ProductService {
               coverCountry: data.coverCountry,
               code: data.code,
               name: data.name,
-              color: data.name,
+              numberInPalet: data.numberInPalet,
               quality: data.quality,
               status: normalStatus,
               imageUrl: data.imageUrl,
