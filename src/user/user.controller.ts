@@ -10,8 +10,11 @@ import {
 import { AccessGuard } from '../user-auth/access.guard';
 import { UserService } from './user.service';
 import { ProductDto } from '../product/product.dto';
+import { GetYourselfGuard } from '../user-auth/get-yourself.guard';
+import { getYourSelf } from '../utils/auth/get-yourself.decorator';
 
 @UseGuards(AccessGuard)
+@UseGuards(GetYourselfGuard)
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -21,6 +24,7 @@ export class UserController {
     return this.userService.getUser();
   }
 
+  @getYourSelf('admin')
   @Get('/:key')
   getByKey(@Param('key') key) {
     return this.userService.getUserByKey(key);

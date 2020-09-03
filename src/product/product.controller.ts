@@ -18,34 +18,30 @@ import { Access } from '../utils/auth/access.decorator';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Access('handler','user')
+  @Access('handler', 'user')
   @Get()
   get() {
     return this.productService.getProduct();
   }
 
-  @Access('handler','user')
-
+  @Access('handler', 'user')
   @Get('/:key')
   getByKey(@Param('key') key) {
     return this.productService.getProductByKey(key);
   }
   @Access('handler')
-
   @Post()
-  post(@Body() data:ProductDto) {
+  post(@Body() data: ProductDto) {
     console.log(data);
     return this.productService.createProduct(data);
   }
   @Access('handler')
-
   @Put('/:key')
   put(@Body() data: ProductDto, @Param('key') key) {
     return this.productService.updateProduct(data, key);
   }
 
   @Access('handler')
-
   @Delete('/:key')
   delete(@Param('key') key) {
     return this.productService.deleteProduct(key);

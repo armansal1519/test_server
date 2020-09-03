@@ -46,9 +46,8 @@ export class ProductService {
               status: normalStatus,
               imageUrl: data.imageUrl,
             };
-            this.arango.create(this.col,expandData)
+            this.arango.create(this.col, expandData);
           }
-
         }
       }
     }

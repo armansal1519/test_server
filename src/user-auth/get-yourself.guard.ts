@@ -5,46 +5,56 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { jwtConstant } from 'src/utils/auth/constans';
 import * as jwt from 'jsonwebtoken';
 import { Reflector } from '@nestjs/core';
 import { Arango } from '../arango/Arango';
+import { jwtConstant } from '../utils/auth/constans';
 
 @Injectable()
-export class AccessGuard implements CanActivate {
+export class GetYourselfGuard implements CanActivate {
   userCol;
   arango;
   constructor(private reflector: Reflector) {
     this.arango = new Arango();
     this.userCol = this.arango.getCol('users');
   }
-
   async canActivate(context: ExecutionContext) {
-    const access = this.reflector.get<string[]>('access', context.getHandler());
-    // console.log('show acces in access gurd', access);
+    const getYourSelf = this.reflector.get<string[]>(
+      'getYourSelf',
+      context.getHandler(),
+    );
+    // console.log('show acces in getYourSelf gurd', getYourSelf);
     const req = context.switchToHttp().getRequest();
     const authHeader = req.headers.authorization;
-    const userAccess: string[] = await this.headerToAccessPayload(authHeader);
+    const user = await this.headerToAccessPayload(authHeader);
+    const userAccess = user.access;
 
-    if (!access) {
+    if (!getYourSelf) {
+      return true;
+    }
+
+    if (!req.params) {
+      return true;
+    }
+
+    if (req.params['key'] == user._key) {
       return true;
     }
 
     let accessError = true;
-    for (let i = 0; i < access.length; i++) {
+    for (let i = 0; i < getYourSelf.length; i++) {
       for (let j = 0; j < userAccess.length; j++) {
-        if (userAccess[j] === access[i]) {
+        if (userAccess[j] === getYourSelf[i]) {
           accessError = false;
           return true;
         }
       }
     }
     if (accessError) {
-      throw new ConflictException('access error');
+      throw new ConflictException('getYourSelf error');
     }
     return false;
   }
-
   async headerToAccessPayload(authHeader: string) {
     if (!authHeader) {
       throw new UnauthorizedException('header does not exist! ' + authHeader);
@@ -65,6 +75,6 @@ export class AccessGuard implements CanActivate {
     // console.log(_key);
     const user = await this.arango.getByKey(this.userCol, _key);
     // console.log(user);
-    return user[0].access;
+    return user[0];
   }
 }

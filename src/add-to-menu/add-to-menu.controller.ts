@@ -8,7 +8,7 @@ import { Access } from '../utils/auth/access.decorator';
 export class AddToMenuController {
   constructor(private addToMenuService: AddToMenuService) {}
 
-  @Access('handler','user')
+  @Access('handler', 'user')
   @Get()
   getAllMenu() {
     return this.addToMenuService.getMenu();

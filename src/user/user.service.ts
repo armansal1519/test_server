@@ -13,7 +13,7 @@ export class UserService {
     const internalUser = await this.arango.getAll(this.userCol);
 
     const users = internalUser.map(item => {
-      console.log(item);
+      // console.log(item);
       delete item.hashPass;
       return item;
     });
@@ -28,7 +28,7 @@ export class UserService {
     const internalUser = await this.arango.getByKey(this.userCol, key);
     // console.log(internalUser);
     const users = internalUser.map(item => {
-      console.log(item);
+      // console.log(item);
       delete item.hashPass;
       return item;
     });

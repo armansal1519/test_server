@@ -17,12 +17,12 @@ export class CompanyService {
     return this.arango.getByKey(this.col, key);
   }
 
-  getSheetFromOneCompany(companyKey){
-    const query=`for i in products
+  getSheetFromOneCompany(companyKey) {
+    const query = `for i in products
 let c= DOCUMENT("company","${companyKey}")
 filter i.company==c.name
-return i`
-    return this.arango.executeGetQuery(query)
+return i`;
+    return this.arango.executeGetQuery(query);
   }
 
   createCompany(data) {
