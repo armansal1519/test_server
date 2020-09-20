@@ -23,7 +23,13 @@ export class AccessGuard implements CanActivate {
     const access = this.reflector.get<string[]>('access', context.getHandler());
     // console.log('show acces in access gurd', access);
     const req = context.switchToHttp().getRequest();
+    console.log('in');
     const authHeader = req.headers.authorization;
+    console.log(access);
+
+    if(!authHeader && access.includes('all')){
+      return true
+    }
     const userAccess: string[] = await this.headerToAccessPayload(authHeader);
 
     if (!access) {

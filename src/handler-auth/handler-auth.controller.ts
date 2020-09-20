@@ -18,8 +18,9 @@ export class HandlerAuthController {
   @Post('login')
   async loginHandler(@Body() data) {
     const { phoneNumber, password } = data;
+
     const user = await this.userService.getUserByPhoneNumber(phoneNumber);
-    console.log(user);
+
     const access = user[0].access;
     for (let i = 0; i < access.length; i++) {
       if (access[i] === 'handler') {

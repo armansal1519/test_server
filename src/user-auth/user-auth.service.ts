@@ -25,12 +25,12 @@ export class UserAuthService {
   }
 
   async sendValidationCode(data) {
-    const { phoneNumber, password } = data;
+    const { phoneNumber } = data;
     await this.arango.phoneNumberBeUnique(this.tempUserCol, phoneNumber);
     await this.arango.phoneNumberBeUnique(this.userCol, phoneNumber);
     const validationCode = this.generateValidationCode();
     await this.sendValidCode(phoneNumber, validationCode);
-    await this.saveTempUser(phoneNumber, password, validationCode);
+    await this.saveTempUser(phoneNumber,  validationCode);
 
     return { phoneNumber, validationCode };
   }
@@ -45,12 +45,10 @@ export class UserAuthService {
     return await this.httpClass.sendValidCodeFunc(phoneNumber, code);
   }
 
-  async saveTempUser(phoneNumber, pass, validationCode) {
-    const hashPass = await argon2.hash(pass);
+  async saveTempUser(phoneNumber,  validationCode) {
 
     const data = {
       phoneNumber,
-      hashPass,
       validationCode,
     };
 
@@ -63,6 +61,7 @@ export class UserAuthService {
     const query = aql`for t in tempUsers
 filter t.phoneNumber==${phoneNumber}
 remove t in tempUsers`;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     setTimeout(() => {
       that.arango.executeEmptyQuery(query);
@@ -71,12 +70,15 @@ remove t in tempUsers`;
     return returnData;
   }
 
-  async register(phoneNumber) {
+  async register(phoneNumber,password) {
     const tempUser = await this.arango.getByPhoneNumber(
       this.tempUserCol,
       phoneNumber,
     );
-    const { hashPass } = tempUser[0];
+    if (!tempUser[0]){
+      throw new NotFoundException('not found in temp user')
+    }
+    const hashPass = await argon2.hash(password);
     const access = ['user'];
     const data = {
       phoneNumber,
@@ -154,6 +156,7 @@ remove t in tempUsers`;
     const query = aql`for t in forgotPassword
 filter t.phoneNumber==${phoneNumber}
 remove t in forgotPassword`;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     setTimeout(() => {
       that.arango.executeEmptyQuery(query);

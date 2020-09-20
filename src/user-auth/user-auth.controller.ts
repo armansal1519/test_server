@@ -13,8 +13,8 @@ export class UserAuthController {
 
   @Post('register')
   register(@Body() data) {
-    const { phoneNumber } = data;
-    return this.userAuthService.register(phoneNumber);
+    const { phoneNumber ,password} = data;
+    return this.userAuthService.register(phoneNumber,password);
   }
 
   @Post('login')

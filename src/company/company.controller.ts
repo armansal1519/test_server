@@ -13,28 +13,26 @@ import { CompantDto } from './compantDto';
 import { Access } from '../utils/auth/access.decorator';
 import { AccessGuard } from '../user-auth/access.guard';
 
-@UseGuards(AccessGuard)
 @Controller('company')
 export class CompanyController {
   constructor(private companyService: CompanyService) {}
 
-  @Access('handler', 'user')
   @Get()
   get() {
     return this.companyService.getCompany();
   }
 
-  @Access('handler', 'user')
   @Get('/:key')
   getByKey(@Param('key') key) {
     return this.companyService.getCompanyByKey(key);
   }
 
-  @Access('handler', 'user')
   @Get('/sheet/:key')
   getSheetFromOneCompany(@Param('key') key) {
     return this.companyService.getSheetFromOneCompany(key);
   }
+
+  @UseGuards(AccessGuard)
 
   @Access('handler')
   @Post()
@@ -42,11 +40,15 @@ export class CompanyController {
     return this.companyService.createCompany(data);
   }
 
+  @UseGuards(AccessGuard)
+
   @Access('handler')
   @Put('/:key')
   put(@Body() data: CompantDto, @Param('key') key) {
     return this.companyService.updateCompany(data, key);
   }
+
+  @UseGuards(AccessGuard)
 
   @Access('handler')
   @Delete('/:key')

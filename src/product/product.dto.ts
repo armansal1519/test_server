@@ -4,13 +4,13 @@ export class ProductDto {
   @IsNotEmpty()
   company: string;
   @IsNotEmpty()
-  coverSelect: string[];
+  coverSelect: string;
   @IsNotEmpty()
   sheetSelect: string[];
   @IsNotEmpty()
   dimensionsSelect: string[];
   @IsNotEmpty()
-  thicknessSelect: string[];
+  thicknessSelect: string;
   @IsNotEmpty()
   sheetCountry: string;
   @IsNotEmpty()
@@ -29,4 +29,6 @@ export class ProductDto {
   imageUrl: string[];
   @IsNotEmpty()
   sideSheetType: string[];
+  @IsNotEmpty()
+  desc:string
 }
