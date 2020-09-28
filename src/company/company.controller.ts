@@ -33,7 +33,6 @@ export class CompanyController {
   }
 
   @UseGuards(AccessGuard)
-
   @Access('handler')
   @Post()
   post(@Body() data: CompantDto) {
@@ -41,7 +40,6 @@ export class CompanyController {
   }
 
   @UseGuards(AccessGuard)
-
   @Access('handler')
   @Put('/:key')
   put(@Body() data: CompantDto, @Param('key') key) {
@@ -49,7 +47,6 @@ export class CompanyController {
   }
 
   @UseGuards(AccessGuard)
-
   @Access('handler')
   @Delete('/:key')
   delete(@Param('key') key) {

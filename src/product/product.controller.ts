@@ -27,7 +27,6 @@ export class ProductController {
     return this.productService.getProductByKey(key);
   }
   @UseGuards(AccessGuard)
-
   @Access('handler')
   @Post()
   post(@Body() data: ProductDto) {
@@ -35,7 +34,6 @@ export class ProductController {
     return this.productService.createProduct(data);
   }
   @UseGuards(AccessGuard)
-
   @Access('handler')
   @Put('/:key')
   put(@Body() data: ProductDto, @Param('key') key) {
@@ -43,7 +41,6 @@ export class ProductController {
   }
 
   @UseGuards(AccessGuard)
-
   @Access('handler')
   @Delete('/:key')
   delete(@Param('key') key) {

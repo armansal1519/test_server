@@ -1,21 +1,27 @@
-import { IsDateString, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class OrderDto {
   @IsDateString()
   dateOfOrder: Date;
 
-  @IsDateString()
-  dateOfShipping: Date;
+  // @IsDateString()
+  // dateOfShipping: Date;
+
+  // @IsNotEmpty()
+  // status: string;
+
+  // @IsNotEmpty()
+  // handlerId: string;
 
   @IsNotEmpty()
-  status: string;
+  userId: string;
 
   @IsNotEmpty()
-  handlerId: string;
+  productId: string;
 
   @IsNotEmpty()
-  startNodeId: string;
+  index: number;
 
   @IsNotEmpty()
-  endNodeId: string;
+  number: number;
 }

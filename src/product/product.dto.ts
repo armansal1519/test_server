@@ -30,5 +30,5 @@ export class ProductDto {
   @IsNotEmpty()
   sideSheetType: string[];
   @IsNotEmpty()
-  desc:string
+  desc: string;
 }

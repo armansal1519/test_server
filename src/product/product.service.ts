@@ -26,11 +26,9 @@ export class ProductService {
     } else {
       normalStatus = false;
     }
-    data['status']=normalStatus
+    data['status'] = normalStatus;
     // data['numberInStock']=0
     // data['price']=null
-
-
 
     // for (let i = 0; i < data.coverSelect.length; i++) {
     //   for (let j = 0; j < data.sheetSelect.length; j++) {
@@ -57,7 +55,6 @@ export class ProductService {
     //   }
     // }
     this.arango.create(this.col, data);
-
   }
 
   updateProduct(data: ProductDto, key: string) {

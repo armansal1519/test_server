@@ -30,7 +30,7 @@ export class UserAuthService {
     await this.arango.phoneNumberBeUnique(this.userCol, phoneNumber);
     const validationCode = this.generateValidationCode();
     await this.sendValidCode(phoneNumber, validationCode);
-    await this.saveTempUser(phoneNumber,  validationCode);
+    await this.saveTempUser(phoneNumber, validationCode);
 
     return { phoneNumber, validationCode };
   }
@@ -45,8 +45,7 @@ export class UserAuthService {
     return await this.httpClass.sendValidCodeFunc(phoneNumber, code);
   }
 
-  async saveTempUser(phoneNumber,  validationCode) {
-
+  async saveTempUser(phoneNumber, validationCode) {
     const data = {
       phoneNumber,
       validationCode,
@@ -70,13 +69,13 @@ remove t in tempUsers`;
     return returnData;
   }
 
-  async register(phoneNumber,password) {
+  async register(phoneNumber, password) {
     const tempUser = await this.arango.getByPhoneNumber(
       this.tempUserCol,
       phoneNumber,
     );
-    if (!tempUser[0]){
-      throw new NotFoundException('not found in temp user')
+    if (!tempUser[0]) {
+      throw new NotFoundException('not found in temp user');
     }
     const hashPass = await argon2.hash(password);
     const access = ['user'];

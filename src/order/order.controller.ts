@@ -12,7 +12,7 @@ import { OrderService } from './order.service';
 import { OrderDto } from './order.dto';
 import { AccessGuard } from '../user-auth/access.guard';
 
-@UseGuards(AccessGuard)
+// @UseGuards(AccessGuard)
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
@@ -33,8 +33,13 @@ export class OrderController {
 
   @Post()
   post(@Body() data: OrderDto) {
-    const { startNodeId, endNodeId } = data;
-    return this.orderService.createOrder(data, startNodeId, endNodeId);
+    const { userId, productId } = data;
+    return this.orderService.createOrder(data, userId, productId);
+  }
+
+  @Get('/v/:key')
+  paymentVerification(@Param('key') key) {
+    return this.orderService.validateOrder(key)
   }
 
   @Put(':key')

@@ -3,7 +3,6 @@ import { AddToMenuService } from './add-to-menu.service';
 import { AccessGuard } from '../user-auth/access.guard';
 import { Access } from '../utils/auth/access.decorator';
 
-
 @Controller('menu')
 export class AddToMenuController {
   constructor(private addToMenuService: AddToMenuService) {}

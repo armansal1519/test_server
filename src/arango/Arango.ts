@@ -153,7 +153,8 @@ export class Arango {
 
   async addEdge(edgeCol, startNode, endNode, data) {
     try {
-      await edgeCol.save(data, startNode, endNode);
+      const meta = await edgeCol.save(data, startNode, endNode);
+      return meta;
     } catch (err) {
       return err;
     }

@@ -15,7 +15,6 @@ import { getYourSelf } from '../utils/auth/get-yourself.decorator';
 import { Access } from '../utils/auth/access.decorator';
 
 @UseGuards(AccessGuard)
-
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -34,7 +33,6 @@ export class UserController {
   }
   @UseGuards(GetYourselfGuard)
   @getYourSelf('admin')
-
   @Put('/:key')
   put(@Body() data: ProductDto, @Param('key') key) {
     return this.userService.updateUser(data, key);

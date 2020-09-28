@@ -27,8 +27,8 @@ export class AccessGuard implements CanActivate {
     const authHeader = req.headers.authorization;
     console.log(access);
 
-    if(!authHeader && access.includes('all')){
-      return true
+    if (!authHeader && access.includes('all')) {
+      return true;
     }
     const userAccess: string[] = await this.headerToAccessPayload(authHeader);
 
