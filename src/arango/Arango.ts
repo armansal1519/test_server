@@ -107,6 +107,17 @@ export class Arango {
     }
   }
 
+  async getByKeyArray(col,keyArr){
+    const cursor = await this._db.query(aql`
+  FOR key IN ${keyArr}
+  LET doc = DOCUMENT(${col}, key)
+  RETURN doc
+`);
+    const docs = await cursor.all();
+    return docs
+
+  }
+
   async create(col, data) {
     const query = aql`insert ${data} into ${col} RETURN NEW`;
     let cursor;

@@ -6,5 +6,6 @@ import { Arango } from '../arango/Arango';
 @Module({
   controllers: [CompanyController],
   providers: [CompanyService, Arango],
+  exports: [CompanyService],
 })
 export class CompanyModule {}

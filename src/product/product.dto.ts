@@ -6,7 +6,7 @@ export class ProductDto {
   @IsNotEmpty()
   coverSelect: string;
   @IsNotEmpty()
-  sheetSelect: string[];
+  sheetSelect: string;
   @IsNotEmpty()
   dimensionsSelect: string[];
   @IsNotEmpty()

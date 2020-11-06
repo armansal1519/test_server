@@ -39,7 +39,7 @@ export class OrderController {
 
   @Get('/v/:key')
   paymentVerification(@Param('key') key) {
-    return this.orderService.validateOrder(key)
+    return this.orderService.validateOrder(key);
   }
 
   @Put(':key')

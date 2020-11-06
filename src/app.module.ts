@@ -8,6 +8,8 @@ import { HandlerAuthModule } from './handler-auth/handler-auth.module';
 import { UploadImageModule } from './upload-image/upload-image.module';
 import { CompanyModule } from './company/company.module';
 import { TicketModule } from './ticket/ticket.module';
+import { CartModule } from './cart/cart.module';
+import { ArmanModule } from './arman/arman.module';
 
 @Module({
   imports: [
@@ -16,11 +18,12 @@ import { TicketModule } from './ticket/ticket.module';
     UserAuthModule,
     AddToMenuModule,
     UserModule,
-
     HandlerAuthModule,
     UploadImageModule,
     CompanyModule,
     TicketModule,
+    CartModule,
+    ArmanModule,
   ],
   controllers: [],
   providers: [],

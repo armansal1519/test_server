@@ -26,6 +26,13 @@ export class ProductController {
   getByKey(@Param('key') key) {
     return this.productService.getProductByKey(key);
   }
+
+  @Get('/fav/:userKey')
+  getProductByKeyArray(@Param('userKey') userKey){
+
+    return this.productService.getProductByKeyArray(userKey)
+  }
+
   @UseGuards(AccessGuard)
   @Access('handler')
   @Post()

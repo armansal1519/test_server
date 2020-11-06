@@ -32,6 +32,8 @@ export class OrderService {
       return {"order":e,"user":i,"product":v}
        `;
     return this.arango.executeGetQuery(query);
+
+    // return this.arango.getAll(this.orderCol)
   }
 
   async getAllOrderOfOneUser(key) {
@@ -52,7 +54,7 @@ export class OrderService {
     const temp = productId.split('/');
     const productKey = temp[1];
     // console.log(data ,productKey); ok
-    data['status']='notValid'
+    data['status'] = 'notValid';
     const orderedProduct = await this.productService.getProductByKey(
       productKey,
     );
@@ -70,7 +72,7 @@ export class OrderService {
       throw new ConflictException('product price have problem');
     }
     const amount = orderedProduct[0].doExist[data.index].price * data.number;
-    data['amount']=amount
+    data['amount'] = amount;
 
     const meta = await this.arango.addEdge(
       this.orderCol,
@@ -96,28 +98,25 @@ export class OrderService {
     return zarinpalResp.url;
   }
 
-  async validateOrder(orderKey){
-    const order=await this.arango.getByKey(this.orderCol,orderKey)
+  async validateOrder(orderKey) {
+    const order = await this.arango.getByKey(this.orderCol, orderKey);
     console.log(order);
-    const data={
+    const data = {
       Amount: order[0].amount, // In Tomans
       Authority: order[0].zarinpalAuthority,
-    }
-    const resp= await this.zarinpal.paymentVerification(data)
-     this.arango.update(this.orderCol,{redId:resp.RefID,status:'valid'},orderKey)
-    delete order[0].zarinpalAuthority
+    };
+    const resp = await this.zarinpal.paymentVerification(data);
+    this.arango.update(
+      this.orderCol,
+      { refId: resp.RefID, status: 'valid' },
+      orderKey,
+    );
+    delete order[0].zarinpalAuthority;
 
-    delete order[0].index
+    delete order[0].index;
 
-
-    return order[0]
-
+    return order[0];
   }
-
-
-
-
-
 
   updateOrder(key, data) {
     return this.arango.updateEdge(this.orderCol, data, key);

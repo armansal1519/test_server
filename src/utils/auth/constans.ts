@@ -8,4 +8,5 @@ export let smsTokenData = {
 
 export const jwtConstant = {
   accessTokenSecret: 'arman',
+  refreshTokenSecret: 'salehi',
 };

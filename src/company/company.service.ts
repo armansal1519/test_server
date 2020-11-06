@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Arango } from '../arango/Arango';
+import { aql } from 'arangojs';
 
 @Injectable()
 export class CompanyService {
@@ -10,11 +11,19 @@ export class CompanyService {
   }
 
   getCompany() {
+
     return this.arango.getAll(this.col);
   }
 
   getCompanyByKey(key) {
     return this.arango.getByKey(this.col, key);
+  }
+
+  getCompanyByName(name) {
+    const query = `for c in company
+filter c.name=="name"
+return c`;
+    return this.arango.executeGetQuery(query);
   }
 
   getSheetFromOneCompany(companyKey) {
@@ -26,6 +35,7 @@ return i`;
   }
 
   createCompany(data) {
+    data['sheets'] = [];
     return this.arango.create(this.col, data);
   }
 

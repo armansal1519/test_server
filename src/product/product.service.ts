@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Arango } from '../arango/Arango';
 import { ProductDto } from './product.dto';
+import { CompanyService } from '../company/company.service';
 
 @Injectable()
 export class ProductService {
   col;
+  userCol;
 
-  constructor(private arango: Arango) {
+  constructor(private arango: Arango, private companyService: CompanyService,) {
     this.col = arango.getCol('products');
+    this.userCol = arango.getCol('users');
   }
 
   getProduct() {
@@ -15,11 +18,30 @@ export class ProductService {
   }
 
   getProductByKey(key) {
-    return this.arango.getByKey(this.col, key);
+    // return this.arango.getByKey(this.col, key);
+    const query=`for i in products
+filter i._key=="${key}"
+update i with {seen:i.seen +1} in products
+return NEW`
+    return this.arango.executeGetQuery(query)
+  }
+
+  async getProductByKeyArray(userKey){
+    const user=await this.arango.getByKey(this.userCol,userKey)
+    console.log(1,user);
+    const keys=user[0].fav
+    console.log(keys);
+
+  //   const query=`FOR key IN ${keys}
+  // LET doc = DOCUMENT(products, key)
+  // RETURN doc`
+  //
+  //   return await  this.arango.executeGetQuery(query)
+    return await this.arango.getByKeyArray(this.col,keys)
   }
 
   createProduct(data: ProductDto) {
-    const { status } = data;
+    const { status, company, sheetSelect } = data;
     let normalStatus;
     if (status == 'موجود') {
       normalStatus = true;
@@ -27,6 +49,15 @@ export class ProductService {
       normalStatus = false;
     }
     data['status'] = normalStatus;
+
+    let c = this.companyService.getCompanyByName(company);
+    console.log(c);
+    if (sheetSelect in c['sheets']) {
+      console.log(c['sheets']);
+    } else {
+      c['sheets'].push(sheetSelect);
+    }
+
     // data['numberInStock']=0
     // data['price']=null
 

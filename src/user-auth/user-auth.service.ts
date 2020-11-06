@@ -17,11 +17,13 @@ export class UserAuthService {
   tempUserCol;
   userCol;
   forgotPasswordCol;
+  refreshCol;
 
   constructor(private arango: Arango, private httpClass: HttpClass) {
     this.tempUserCol = arango.getCol('tempUsers');
     this.userCol = arango.getCol('users');
     this.forgotPasswordCol = arango.getCol('forgotPassword');
+    this.refreshCol = arango.getCol('refreshToken');
   }
 
   async sendValidationCode(data) {
@@ -64,7 +66,7 @@ remove t in tempUsers`;
     const that = this;
     setTimeout(() => {
       that.arango.executeEmptyQuery(query);
-    }, 2 * 60 * 1000);
+    }, 59 * 1000);
 
     return returnData;
   }
@@ -86,14 +88,20 @@ remove t in tempUsers`;
     };
 
     const newUser = await this.arango.create(this.userCol, data);
-    console.log(newUser);
+    // console.log(newUser);
     const payload = {
       _key: newUser[0]._key,
     };
     const accessToken = this.createAccessToken(payload);
+    const refreshToken = this.createRefreshToken(payload);
+
+    delete newUser[0]['hashPass'];
 
     return {
+      user: newUser[0],
       accessToken: accessToken,
+      refreshToken: refreshToken,
+
       expiresIn: '2h',
     };
   }
@@ -110,11 +118,14 @@ remove t in tempUsers`;
     const payload = {
       _key: user._key,
     };
-    const accessToken = this.createAccessToken(payload);
+    const accessToken = await this.createAccessToken(payload);
+    const refreshToken = await this.createRefreshToken(payload);
+    // console.log(1,refreshToken);
 
     return {
       user: user,
       accessToken: accessToken,
+      refreshToken: refreshToken,
       expiresIn: '2h',
       authTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000),
     };
@@ -123,14 +134,14 @@ remove t in tempUsers`;
   async validateUser(phoneNumber: string, pass: string) {
     const user = await this.arango.getByPhoneNumber(this.userCol, phoneNumber);
 
-    console.log(user);
+    // console.log(user);
     const match = await argon2.verify(user[0].hashPass, pass);
     // const match=pass==user[0].pass
-    console.log('match', match);
+    // console.log('match', match);
     if (user && match) {
       const { pass, ...u } = user[0];
 
-      console.log('in if');
+      // console.log('in if');
       return u;
     }
     return null;
@@ -159,7 +170,7 @@ remove t in forgotPassword`;
     const that = this;
     setTimeout(() => {
       that.arango.executeEmptyQuery(query);
-    }, 2 * 60 * 1000);
+    }, 58 * 1000);
 
     return phoneNumber;
   }
@@ -171,29 +182,83 @@ remove t in forgotPassword`;
     );
 
     if (u[0].validationCode === code) {
-      const newHashPassword = await argon2.hash(code);
+      // const newHashPassword = await argon2.hash(password);
       const user = await this.arango.getByPhoneNumber(
         this.userCol,
         phoneNumber,
       );
-      console.log(user);
+      // console.log(user);
       const key = user[0]._key;
-      return this.arango.update(
-        this.userCol,
-        { hashPass: newHashPassword },
-        key,
-      );
+      const token = this.createAccessToken({ _key: key });
+      const refreshToken = this.createRefreshToken({ _key: key });
+      delete user[0].hashPass;
+      return {
+        accessToken: token,
+        user: user[0],
+        refreshToken: refreshToken,
+      };
     }
     throw new ConflictException();
   }
+  async patchNameAndPassword(data, key) {
+    const { password, fullName, email } = data;
+    const hashPass = await argon2.hash(password);
+    return this.arango.update(
+      this.userCol,
+      { fullName: fullName, hashPass: hashPass, email: email },
+      key,
+    );
+  }
+
+  async refreshToken(token) {
+    const payload = await jwt.verify(token, jwtConstant.refreshTokenSecret);
+    const query = `for u in refreshToken
+filter u.userKey=="${payload._key}"
+return u`;
+    let data
+    try {
+       data = await this.arango.executeGetQuery(query);
+
+    } catch (err) {
+      throw new UnauthorizedException('refresh token do not exist');
+    }
+
+    delete payload['iat']
+    return this.createAccessToken(payload);
+  }
 
   createAccessToken(payload) {
-    const accessToken: string = jwt.sign(
+    const Token: string = jwt.sign(payload, jwtConstant.accessTokenSecret, {
+      expiresIn: '2h',
+    });
+
+    return Token;
+
+  }
+
+  async createRefreshToken(payload) {
+    const refreshToken: string = jwt.sign(
       payload,
-      jwtConstant.accessTokenSecret,
-      { expiresIn: '2h' },
+      jwtConstant.refreshTokenSecret,
     );
-    return accessToken;
+    // console.log(2,payload);
+
+    const query = `for u in refreshToken
+filter u.userKey=="${payload._key}"
+return u`;
+
+    // const data=await this.arango.executeGetQuery(query)
+    try {
+      const data = await this.arango.executeGetQuery(query);
+      // console.log(data);
+      return data[0].refreshToken;
+    } catch (err) {
+      await this.arango.create(this.refreshCol, {
+        userKey: payload._key,
+        refreshToken: refreshToken,
+      });
+      return refreshToken;
+    }
   }
 
   generateValidationCode() {

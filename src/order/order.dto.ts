@@ -24,4 +24,10 @@ export class OrderDto {
 
   @IsNotEmpty()
   number: number;
+
+
+  @IsNotEmpty()
+  addressIndex:number
+
+  addInfo:string
 }

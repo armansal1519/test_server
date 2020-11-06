@@ -3,13 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  Param, Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
 import { AccessGuard } from '../user-auth/access.guard';
 import { UserService } from './user.service';
-import { ProductDto } from '../product/product.dto';
 import { GetYourselfGuard } from '../user-auth/get-yourself.guard';
 import { getYourSelf } from '../utils/auth/get-yourself.decorator';
 import { Access } from '../utils/auth/access.decorator';
@@ -33,10 +32,30 @@ export class UserController {
   }
   @UseGuards(GetYourselfGuard)
   @getYourSelf('admin')
+  @Access('all', 'user')
   @Put('/:key')
-  put(@Body() data: ProductDto, @Param('key') key) {
+  put(@Body() data, @Param('key') key) {
     return this.userService.updateUser(data, key);
   }
+
+  @UseGuards(GetYourselfGuard)
+  @getYourSelf('admin')
+  @Access('all','user')
+  @Post('/:key/fav')
+  addFavorite(@Param('key')userKey,@Body() data,){
+    const{productKey}=data
+    return this.userService.addFavorite(userKey,productKey)
+  }
+
+  @UseGuards(GetYourselfGuard)
+  @getYourSelf('admin')
+  @Access('all','user')
+  @Post('/:key/remove-fav')
+  removeFavorite(@Param('key')userKey,@Body() data,){
+    const{productKey}=data
+    return this.userService.removeFav(userKey,productKey)
+  }
+
 
   @UseGuards(GetYourselfGuard)
   @getYourSelf('admin')
@@ -44,4 +63,6 @@ export class UserController {
   delete(@Param('key') key) {
     return this.userService.deleteUser(key);
   }
+
+
 }
