@@ -215,15 +215,14 @@ remove t in forgotPassword`;
     const query = `for u in refreshToken
 filter u.userKey=="${payload._key}"
 return u`;
-    let data
+    let data;
     try {
-       data = await this.arango.executeGetQuery(query);
-
+      data = await this.arango.executeGetQuery(query);
     } catch (err) {
       throw new UnauthorizedException('refresh token do not exist');
     }
 
-    delete payload['iat']
+    delete payload['iat'];
     return this.createAccessToken(payload);
   }
 
@@ -233,7 +232,6 @@ return u`;
     });
 
     return Token;
-
   }
 
   async createRefreshToken(payload) {

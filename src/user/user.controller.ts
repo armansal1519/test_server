@@ -3,7 +3,8 @@ import {
   Controller,
   Delete,
   Get,
-  Param, Post,
+  Param,
+  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -40,22 +41,21 @@ export class UserController {
 
   @UseGuards(GetYourselfGuard)
   @getYourSelf('admin')
-  @Access('all','user')
+  @Access('all', 'user')
   @Post('/:key/fav')
-  addFavorite(@Param('key')userKey,@Body() data,){
-    const{productKey}=data
-    return this.userService.addFavorite(userKey,productKey)
+  addFavorite(@Param('key') userKey, @Body() data) {
+    const { productKey } = data;
+    return this.userService.addFavorite(userKey, productKey);
   }
 
   @UseGuards(GetYourselfGuard)
   @getYourSelf('admin')
-  @Access('all','user')
+  @Access('all', 'user')
   @Post('/:key/remove-fav')
-  removeFavorite(@Param('key')userKey,@Body() data,){
-    const{productKey}=data
-    return this.userService.removeFav(userKey,productKey)
+  removeFavorite(@Param('key') userKey, @Body() data) {
+    const { productKey } = data;
+    return this.userService.removeFav(userKey, productKey);
   }
-
 
   @UseGuards(GetYourselfGuard)
   @getYourSelf('admin')
@@ -63,6 +63,4 @@ export class UserController {
   delete(@Param('key') key) {
     return this.userService.deleteUser(key);
   }
-
-
 }

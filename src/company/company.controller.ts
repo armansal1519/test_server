@@ -5,7 +5,8 @@ import {
   Get,
   Param,
   Post,
-  Put, Req,
+  Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
@@ -18,8 +19,7 @@ export class CompanyController {
   constructor(private companyService: CompanyService) {}
 
   @Get()
-  get(){
-
+  get() {
     return this.companyService.getCompany();
   }
 

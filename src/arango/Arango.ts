@@ -107,15 +107,14 @@ export class Arango {
     }
   }
 
-  async getByKeyArray(col,keyArr){
+  async getByKeyArray(col, keyArr) {
     const cursor = await this._db.query(aql`
   FOR key IN ${keyArr}
   LET doc = DOCUMENT(${col}, key)
   RETURN doc
 `);
     const docs = await cursor.all();
-    return docs
-
+    return docs;
   }
 
   async create(col, data) {

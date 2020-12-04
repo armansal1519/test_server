@@ -6,7 +6,7 @@ import { CompanyModule } from '../company/company.module';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [CompanyModule ],
+  imports: [CompanyModule],
   controllers: [ProductController],
   providers: [Arango, ProductService],
   exports: [ProductService],

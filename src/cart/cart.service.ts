@@ -39,7 +39,7 @@ export class CartService {
 
   async removeFromCart(data: RemoveCartDto) {
     const { userKey, productKey } = data;
-    console.log(1,userKey,productKey);
+    console.log(1, userKey, productKey);
 
     let user = await this.userService.getUserByKey(userKey);
     user = user[0];

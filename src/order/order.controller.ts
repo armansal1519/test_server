@@ -32,14 +32,13 @@ export class OrderController {
   }
 
   @Post()
-  post(@Body() data: OrderDto) {
-    const { userId, productId } = data;
-    return this.orderService.createOrder(data, userId, productId);
+  post(@Body() data: OrderDto[]) {
+    return this.orderService.createOrder(data);
   }
 
-  @Get('/v/:key')
-  paymentVerification(@Param('key') key) {
-    return this.orderService.validateOrder(key);
+  @Get('/v/:orderKey')
+  paymentVerification(@Param() param) {
+    return this.orderService.validateOrder(param.orderKey);
   }
 
   @Put(':key')

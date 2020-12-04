@@ -25,9 +25,14 @@ export class OrderDto {
   @IsNotEmpty()
   number: number;
 
+  @IsNotEmpty()
+  addressIndex: number;
+
+  addInfo: string;
 
   @IsNotEmpty()
-  addressIndex:number
+  paymentMethod: string;
 
-  addInfo:string
+  @IsNotEmpty()
+  sendMethod:string
 }

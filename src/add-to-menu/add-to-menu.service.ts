@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { Arango } from '../arango/Arango';
 
@@ -16,6 +16,9 @@ export class AddToMenuService {
 
   async addValueToMenuList(data) {
     const { name, value } = data;
+    if (name===undefined || value===undefined) {
+      throw new NotFoundException('name and value of menu cant be undefined')
+    }
 
     const query = `
           for m in menu
@@ -28,6 +31,12 @@ export class AddToMenuService {
 
   async removeValueFromMenuList(data) {
     const { name, value } = data;
+    if (name===undefined || value===undefined) {
+      throw new NotFoundException('name and value of menu cant be undefined')
+    }
+    if (value==='-') {
+      throw new ConflictException('you cant delete -')
+    }
 
     const query = `
           for m in menu

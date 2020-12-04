@@ -1,12 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class ArmanDto{
-@IsNotEmpty()
-  email:string
+export class ArmanDto {
+  @IsNotEmpty()
+  email: string;
 
   @IsNotEmpty()
-  name:string
+  name: string;
 
   @IsNotEmpty()
-  desc:string
+  desc: string;
 }

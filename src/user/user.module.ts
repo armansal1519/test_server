@@ -5,7 +5,7 @@ import { Arango } from '../arango/Arango';
 import { ProductModule } from '../product/product.module';
 
 @Module({
-  imports:[ProductModule],
+  imports: [ProductModule],
   controllers: [UserController],
   providers: [UserService, Arango],
 

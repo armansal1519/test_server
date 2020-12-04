@@ -11,7 +11,6 @@ export class CompanyService {
   }
 
   getCompany() {
-
     return this.arango.getAll(this.col);
   }
 
@@ -21,7 +20,7 @@ export class CompanyService {
 
   getCompanyByName(name) {
     const query = `for c in company
-filter c.name=="name"
+filter c.name=="${name}"
 return c`;
     return this.arango.executeGetQuery(query);
   }

@@ -5,8 +5,8 @@ import { Arango } from '../arango/Arango';
 import { UserAuthModule } from '../user-auth/user-auth.module';
 
 @Module({
-  imports:[UserAuthModule],
+  imports: [UserAuthModule],
   controllers: [ArmanController],
-  providers: [ArmanService,Arango]
+  providers: [ArmanService, Arango],
 })
 export class ArmanModule {}

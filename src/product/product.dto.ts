@@ -16,9 +16,9 @@ export class ProductDto {
   @IsNotEmpty()
   coverCountry: string;
   @IsNotEmpty()
-  code: string;
+  colorCode: string;
   @IsNotEmpty()
-  name: string;
+  color: string;
   @IsNotEmpty()
   numberInPalet: string;
   @IsNotEmpty()
@@ -28,7 +28,14 @@ export class ProductDto {
   @IsNotEmpty()
   imageUrl: string[];
   @IsNotEmpty()
-  sideSheetType: string[];
+  sideSheetType: string;
   @IsNotEmpty()
   desc: string;
+  @IsNotEmpty()
+  weight:string
+  @IsNotEmpty()
+  density:string
+  @IsNotEmpty()
+  keywords:string[]
+
 }

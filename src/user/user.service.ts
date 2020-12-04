@@ -7,9 +7,7 @@ import { ProductService } from '../product/product.service';
 @Injectable()
 export class UserService {
   userCol;
-  constructor(private arango: Arango,
-              private productService:ProductService
-              ) {
+  constructor(private arango: Arango, private productService: ProductService) {
     this.userCol = arango.getCol('users');
   }
 
@@ -52,29 +50,26 @@ export class UserService {
     return this.arango.update(this.userCol, data, key);
   }
 
- async addFavorite(userKey,productKey){
+  async addFavorite(userKey, productKey) {
+    const product = await this.productService.getProductByKey(productKey);
 
-    const product= await this.productService.getProductByKey(productKey)
-
-    const query=`for u in users
+    const query = `for u in users
 filter u._key=="${userKey}"
 update u with {fav:push(u.fav,"${productKey}",true)} in users
-`
-    return await this.arango.executeEmptyQuery(query)
+`;
+    return await this.arango.executeEmptyQuery(query);
   }
 
-  async removeFav(userKey,productKey){
-    console.log(1,productKey);
-    const query=`for u in users
+  async removeFav(userKey, productKey) {
+    console.log(1, productKey);
+    const query = `for u in users
          filter u._key=="${userKey}"
-          update u with {fav:REMOVE_VALUE(u.fav,"${productKey}")} in users`
+          update u with {fav:REMOVE_VALUE(u.fav,"${productKey}")} in users`;
 
-    await this.arango.executeEmptyQuery(query)
+    await this.arango.executeEmptyQuery(query);
   }
 
   deleteUser(key) {
     return this.arango.delete(this.userCol, key);
   }
-
-
 }
