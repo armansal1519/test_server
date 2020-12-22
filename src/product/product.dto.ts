@@ -32,10 +32,11 @@ export class ProductDto {
   @IsNotEmpty()
   desc: string;
   @IsNotEmpty()
-  weight:string
+  weight: string;
   @IsNotEmpty()
-  density:string
+  density: string;
   @IsNotEmpty()
-  keywords:string[]
-
+  keywords: string[];
+  @IsNotEmpty()
+  sideSheet: string;
 }

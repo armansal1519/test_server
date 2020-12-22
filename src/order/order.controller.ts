@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { OrderDto } from './order.dto';
+import { HeadlessOrderDto, OrderDto } from './order.dto';
 import { AccessGuard } from '../user-auth/access.guard';
 
 // @UseGuards(AccessGuard)
@@ -35,6 +35,12 @@ export class OrderController {
   post(@Body() data: OrderDto[]) {
     return this.orderService.createOrder(data);
   }
+
+  @Post('/headless')
+  createHeadlessOrder(@Body() data:HeadlessOrderDto){
+    return this.orderService.createHeadLessOrder(data)
+  }
+
 
   @Get('/v/:orderKey')
   paymentVerification(@Param() param) {
