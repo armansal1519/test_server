@@ -143,15 +143,13 @@ return NEW`;
 
     let c = await this.companyService.getCompanyByName(company);
     c = c[0];
-    // console.log(c);
-    if (sheetSelect in c['sheets']) {
-      console.log(c['sheets']);
-    } else {
-      c['sheets'].push(sheetSelect);
-    }
-    // console.log(1,c);
 
-    this.companyService.updateCompany(c, c._key);
+    await this.arango.executeEmptyQuery(`for c in company
+          filter c._key=="${c['_key']}"
+          update c with {sheets: append(c.sheets,"${sheetSelect}",true)} in company
+          return c`)
+
+
 
     // data['numberInStock']=0
     // data['price']=null
