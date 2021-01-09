@@ -16,14 +16,14 @@ import { diskStorage } from 'multer';
 export class UploadImageController {
   @Get(':imgpath')
   seeUploadedFile(@Param('imgpath') image, @Res() res) {
-    return res.sendFile(image, { root: './files' });
+    return res.sendFile(image, { root: './images' });
   }
 
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './files',
+        destination: './images',
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,
@@ -40,7 +40,7 @@ export class UploadImageController {
   @UseInterceptors(
     FilesInterceptor('image', 20, {
       storage: diskStorage({
-        destination: './files',
+        destination: './images',
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,

@@ -10,6 +10,8 @@ import { CompanyModule } from './company/company.module';
 import { TicketModule } from './ticket/ticket.module';
 import { CartModule } from './cart/cart.module';
 import { ArmanModule } from './arman/arman.module';
+import { ContactModule } from './contact/contact.module';
+import { UploadFileModule } from './upload-file/upload-file.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { ArmanModule } from './arman/arman.module';
     TicketModule,
     CartModule,
     ArmanModule,
+    ContactModule,
+    UploadFileModule,
   ],
   controllers: [],
   providers: [],
