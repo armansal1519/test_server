@@ -37,6 +37,6 @@ export class ProductDto {
   density: string;
   @IsNotEmpty()
   keywords: string[];
-  @IsNotEmpty()
+  // @IsNotEmpty()
   sideSheet: string;
 }
