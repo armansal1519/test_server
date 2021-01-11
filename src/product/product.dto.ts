@@ -27,7 +27,7 @@ export class ProductDto {
   status: string;
   @IsNotEmpty()
   imageUrl: string[];
-  @IsNotEmpty()
+  // @IsNotEmpty()
   sideSheetType: string;
   @IsNotEmpty()
   desc: string;
