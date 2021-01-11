@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Arango } from '../arango/Arango';
 import { ProductDto } from './product.dto';
 import { CompanyService } from '../company/company.service';
-import { async } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -14,8 +13,99 @@ export class ProductService {
     this.userCol = arango.getCol('users');
   }
 
-  getProduct() {
-    return this.arango.getAll(this.col);
+  getProduct(q) {
+
+    let query='for i in products '
+    if (q.sort!==undefined){
+      query+=`\nsort i.${q.sort} DESC`
+    }
+    if (q.limit==true){
+      query+=`\nlimit 15
+`
+    }
+    query+='\nreturn i'
+    console.log(query);
+
+    return this.arango.executeGetQuery(query)
+  }
+
+  async getFilteredProduct(data) {
+    let filterArr = [];
+    for (let dataIndex = 0; dataIndex < data.length; dataIndex++) {
+      let isOnFilterArr = false;
+      for (
+        let filterArrIndex = 0;
+        filterArrIndex < filterArr.length;
+        filterArrIndex++
+      ) {
+        if (data[dataIndex].name === filterArr[filterArrIndex].menuName) {
+          filterArr[filterArrIndex].menuValue.push(data[dataIndex].item);
+          isOnFilterArr = true;
+        }
+      }
+      if (!isOnFilterArr) {
+        filterArr.push({
+          menuName: data[dataIndex].name,
+          menuValue: [data[dataIndex].item],
+        });
+      }
+    }
+    console.log(filterArr);
+
+    let finalStr = '';
+    let preQuery=`for u in products\n`
+    for (let i = 0; i < filterArr.length; i++) {
+      let str = '(';
+      for (let j = 0; j < filterArr[i]['menuValue'].length; j++) {
+        // console.log(2, filterArr[i]['menuValue']);
+        if (j !== 0) {
+          str += ' || ';
+        }
+        if (filterArr[i]['menuName']!=='coverSelect' && filterArr[i]['menuName']!=='dimensionsSelect'&&filterArr[i]['menuName']!=='sideSheetType'){
+          str += `u.${filterArr[i]['menuName']} == "${filterArr[i]['menuValue'][j]}"`;
+        }else {
+          if (filterArr[i]['menuName']==='coverSelect'){
+            if (j==0){
+              preQuery+=`for j in u.coverSelect\n`
+            }
+            str += `j == "${filterArr[i]['menuValue'][j]}"`;
+
+          }
+          else if(filterArr[i]['menuName']==='dimensionsSelect'){
+            if (j==0){
+              preQuery+=`for m in u.dimensionsSelect\n`
+            }
+            str += `m == "${filterArr[i]['menuValue'][j]}"`;
+
+          }
+          else {
+            if (j==0){
+              preQuery+=`for s in u.sideSheetType\n`
+            }
+            str += `s == "${filterArr[i]['menuValue'][j]}"`;
+          }
+        }
+      }
+      str += ')';
+      if (i < filterArr.length - 1) {
+        str += '&&';
+      }
+      finalStr += str;
+      console.log(finalStr);
+    }
+    console.log(333,preQuery);
+    const query = preQuery+`filter ${finalStr}
+return u`;
+    console.log(query);
+    try {
+      return await this.arango.executeGetQuery(query);
+    } catch (err) {
+      if (err.message === 'endpoint is valid but graph is empty') {
+        return [];
+      } else {
+        return err;
+      }
+    }
   }
 
   getProductByKey(key) {
@@ -51,17 +141,15 @@ return NEW`;
     }
     data['status'] = normalStatus;
 
-    let c =await this.companyService.getCompanyByName(company);
-    c=c[0]
-    // console.log(c);
-    if (sheetSelect in c['sheets']) {
-      console.log(c['sheets']);
-    } else {
-      c['sheets'].push(sheetSelect);
-    }
-    // console.log(1,c);
+    let c = await this.companyService.getCompanyByName(company);
+    c = c[0];
 
-    this.companyService.updateCompany(c,c._key)
+    await this.arango.executeEmptyQuery(`for c in company
+          filter c._key=="${c['_key']}"
+          update c with {sheets: append(c.sheets,"${sheetSelect}",true)} in company
+          return c`)
+
+
 
     // data['numberInStock']=0
     // data['price']=null

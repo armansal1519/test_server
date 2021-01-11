@@ -26,8 +26,8 @@ export class OrderService {
   ) {
     this.userCol = this.arango.getCol('users');
     this.orderCol = this.arango.getCol('orders');
-    this.order_user_edge=this.arango.getEdgeCol('order-user')
-    this.order_product_edge=this.arango.getEdgeCol('order-products')
+    this.order_user_edge = this.arango.getEdgeCol('order-user');
+    this.order_product_edge = this.arango.getEdgeCol('order-products');
     this.productCol = this.arango.getCol('products');
     this.productHistoryCol = this.arango.getCol('productHistory');
     this._db = this.arango.getDB();
@@ -40,7 +40,7 @@ export class OrderService {
     //    `;
     // return this.arango.executeGetQuery(query);
 
-    return this.arango.getAll(this.orderCol)
+    return this.arango.getAll(this.orderCol);
   }
 
   async getAllOrderOfOneUser(key) {
@@ -83,10 +83,17 @@ export class OrderService {
     console.log(data);
     let totalCost = 0;
     // const metaArr = [];
-    const { userId,paymentMethod ,sendMethod ,addressIndex,dateOfOrder,addInfo} = data[0];
-    const order =await this.orderCol.save(
-      { paymentMethod,sendMethod,addressIndex,dateOfOrder,addInfo },
-      { returnNew: true }
+    const {
+      userId,
+      paymentMethod,
+      sendMethod,
+      addressIndex,
+      dateOfOrder,
+      addInfo,
+    } = data[0];
+    const order = await this.orderCol.save(
+      { paymentMethod, sendMethod, addressIndex, dateOfOrder, addInfo },
+      { returnNew: true },
     );
 
     for (let i = 0; i < data.length; i++) {
@@ -192,23 +199,21 @@ update i with {ordered:i.ordered +1} in products
       Description: desc,
     };
     const zarinpalResp = await this.zarinpal.createPaymentLink(zarinpalData);
-    console.log('zarin',zarinpalResp);
-    const temp=userId.split('/');
-    const userKey=temp[1]
-    let user=await this.arango.getByKey(this.userCol,userKey)
-    user=user[0]
-    
+    console.log('zarin', zarinpalResp);
+    const temp = userId.split('/');
+    const userKey = temp[1];
+    let user = await this.arango.getByKey(this.userCol, userKey);
+    user = user[0];
+
     const orderData = {
-      fullName:user.fullName,
-      phoneNumber:user.phoneNumber,
+      fullName: user.fullName,
+      phoneNumber: user.phoneNumber,
       totalCost: totalCost,
       zarinpalAuthority: zarinpalResp.authority,
-      status:'not'
-     
+      status: 'not',
     };
 
-    
-    await this.arango.update(this.orderCol,  orderData, order._key);
+    await this.arango.update(this.orderCol, orderData, order._key);
 
     // console.log(meta, zarinpalResp); ok
     // this.arango.update(
@@ -216,38 +221,32 @@ update i with {ordered:i.ordered +1} in products
     //   { zarinpalAuthority: zarinpalResp.authority },
     //   meta._key,
     // );
-     await this.arango.addEdge(
+    await this.arango.addEdge(
       this.order_user_edge,
       userId,
       order._id,
-      
-      {date:Date.now()},
+
+      { date: Date.now() },
     );
     return zarinpalResp.url;
   }
 
-
-  // async createOrder(data){
-  //   let totalPrice=0;
-
-  // }
+  async createHeadLessOrder(data){
+    return
+  }
 
   async validateOrder(orderKey) {
     let order = await this.arango.getByKey(this.orderCol, orderKey);
-    order=order[0]
+    order = order[0];
     const data = {
       Amount: order.totalCost, // In Tomans
       Authority: order.zarinpalAuthority,
     };
     const resp = await this.zarinpal.paymentVerification(data);
-    order['refId']=resp.RefID
-    order['status']='valid'
+    order['refId'] = resp.RefID;
+    order['status'] = 'valid';
     // console.log(3333,user.orderHistory);
-    this.arango.update(
-      this.orderCol,
-      order,
-      order._key
-    );
+    this.arango.update(this.orderCol, order, order._key);
 
     return order;
   }
@@ -269,6 +268,7 @@ update i with {ordered:i.ordered +1} in products
     product['dimension'] = info.sheetInfo[1];
     product['price'] = info.price * number;
     product['number'] = number;
+    product['originalKey']=product['_key']
     delete product['_id'];
     delete product['_rev'];
     delete product['_key'];

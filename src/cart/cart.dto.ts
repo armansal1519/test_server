@@ -20,4 +20,7 @@ export class RemoveCartDto {
 
   @IsNotEmpty()
   productKey: string;
+
+  @IsNotEmpty()
+  index:number
 }
