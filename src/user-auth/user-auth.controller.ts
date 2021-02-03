@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { UserAuthService } from './user-auth.service';
-import { GetValidationCodeDto, PatchNameAndHash } from './user-auth.dto';
+import { ChangePass, GetValidationCodeDto, PatchNameAndHash } from './user-auth.dto';
 
 @Controller('user-auth')
 export class UserAuthController {
@@ -33,6 +33,12 @@ export class UserAuthController {
   resetPassword(@Body() data) {
     const { phoneNumber, code } = data;
     return this.userAuthService.resetPassword(phoneNumber, code);
+  }
+
+  @Post("/change-password/:key")
+  changePass(@Param("key") key,@Body()data:ChangePass){
+    const {oldPass,newPass}=data
+    return this.userAuthService.changePasswordByLastPassword(key,newPass,oldPass)
   }
 
   @Patch('/info/:key')

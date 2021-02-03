@@ -14,3 +14,11 @@ export class PatchNameAndHash {
 
   email: string | string;
 }
+
+export class ChangePass {
+  @IsNotEmpty()
+  oldPass:string
+
+  @IsNotEmpty()
+  newPass:string
+}
