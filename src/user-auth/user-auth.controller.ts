@@ -1,6 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { UserAuthService } from './user-auth.service';
-import { ChangePass, GetValidationCodeDto, PatchNameAndHash } from './user-auth.dto';
+import {
+  ChangePass,
+  GetValidationCodeDto,
+  LoginRegister,
+  PatchNameAndHash,
+} from './user-auth.dto';
 
 @Controller('user-auth')
 export class UserAuthController {
@@ -9,6 +14,12 @@ export class UserAuthController {
   @Post('get-validation-code')
   getValidationCode(@Body() data: GetValidationCodeDto) {
     return this.userAuthService.sendValidationCode(data);
+  }
+
+  @Post('/login-register')
+  loginRegister(@Body() data: LoginRegister) {
+    const { phoneNumber } = data;
+    return this.userAuthService.doesUserExist(phoneNumber);
   }
 
   @Post('register')
@@ -35,10 +46,14 @@ export class UserAuthController {
     return this.userAuthService.resetPassword(phoneNumber, code);
   }
 
-  @Post("/change-password/:key")
-  changePass(@Param("key") key,@Body()data:ChangePass){
-    const {oldPass,newPass}=data
-    return this.userAuthService.changePasswordByLastPassword(key,newPass,oldPass)
+  @Post('/change-password/:key')
+  changePass(@Param('key') key, @Body() data: ChangePass) {
+    const { oldPass, newPass } = data;
+    return this.userAuthService.changePasswordByLastPassword(
+      key,
+      newPass,
+      oldPass,
+    );
   }
 
   @Patch('/info/:key')

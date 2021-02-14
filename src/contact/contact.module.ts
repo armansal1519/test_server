@@ -5,6 +5,6 @@ import { Arango } from '../arango/Arango';
 
 @Module({
   controllers: [ContactController],
-  providers: [ContactService,Arango]
+  providers: [ContactService, Arango],
 })
 export class ContactModule {}

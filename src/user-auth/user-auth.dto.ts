@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { isNotEmpty, IsNotEmpty } from 'class-validator';
 
 export class GetValidationCodeDto {
   @IsNotEmpty()
@@ -17,8 +17,13 @@ export class PatchNameAndHash {
 
 export class ChangePass {
   @IsNotEmpty()
-  oldPass:string
+  oldPass: string;
 
   @IsNotEmpty()
-  newPass:string
+  newPass: string;
+}
+
+export class LoginRegister {
+  @IsNotEmpty()
+  phoneNumber: string;
 }

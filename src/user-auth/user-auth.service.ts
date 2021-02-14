@@ -131,6 +131,20 @@ remove t in tempUsers`;
     };
   }
 
+  async doesUserExist(phoneNumber) {
+    try {
+      const user = await this.arango.getByPhoneNumber(
+        this.userCol,
+        phoneNumber,
+      );
+      return { login: true, name: user[0].fullName };
+    } catch (err) {
+      const resp = await this.sendValidationCode({ phoneNumber: phoneNumber });
+      resp['login'] = false;
+      return resp;
+    }
+  }
+
   async validateUser(phoneNumber: string, pass: string) {
     const user = await this.arango.getByPhoneNumber(this.userCol, phoneNumber);
 
@@ -210,23 +224,26 @@ remove t in forgotPassword`;
     );
   }
 
-  async changePasswordByLastPassword(userKey,newPass,oldPass){
-    const arangoResp=await this.arango.getByKey(this.userCol,userKey)
-    const curPass=arangoResp[0].hashPass
-    const check=await argon2.verify(curPass, oldPass)
+  async changePasswordByLastPassword(userKey, newPass, oldPass) {
+    const arangoResp = await this.arango.getByKey(this.userCol, userKey);
+    const curPass = arangoResp[0].hashPass;
+    const check = await argon2.verify(curPass, oldPass);
     console.log(check);
-    if( check){
-     const newHashPass=await argon2.hash(newPass)
+    if (check) {
+      const newHashPass = await argon2.hash(newPass);
       console.log(newHashPass);
-      await this.arango.update(this.userCol,{
-        hashPass:newHashPass
-      } ,userKey)
-      return
-    }else {
-      throw new ConflictException("old pass is wrong")
+      await this.arango.update(
+        this.userCol,
+        {
+          hashPass: newHashPass,
+        },
+        userKey,
+      );
+      return;
+    } else {
+      throw new ConflictException('old pass is wrong');
     }
   }
-
 
   async refreshToken(token) {
     const payload = await jwt.verify(token, jwtConstant.refreshTokenSecret);

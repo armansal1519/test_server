@@ -5,7 +5,8 @@ import {
   Get,
   Param,
   Post,
-  Put, Query,
+  Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -18,16 +19,21 @@ export class ProductController {
   constructor(private productService: ProductService) {}
 
   @Get()
-  get(@Query()q) {
+  get(@Query() q) {
     return this.productService.getProduct(q);
   }
 
   @Post('/filter')
-  getFilteredArr(@Body() data) {
+  getFilteredArr(@Body() data, @Query() q) {
     console.log(data, 1);
-    return this.productService.getFilteredProduct(data);
+    console.log(q);
+    return this.productService.getFilteredProduct(data, q);
   }
 
+  @Get('/len')
+  getLength() {
+    return this.productService.getLengthOfProduct();
+  }
   @Get('/:key')
   getByKey(@Param('key') key) {
     return this.productService.getProductByKey(key);

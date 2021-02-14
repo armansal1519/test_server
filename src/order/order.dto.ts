@@ -50,8 +50,6 @@ export class HeadlessOrderDto {
   // @IsNotEmpty()
   // handlerId: string;
 
-
-
   @IsNotEmpty()
   productId: string;
 
@@ -67,14 +65,11 @@ export class HeadlessOrderDto {
   @IsNotEmpty()
   addressPhoneNumber: string;
 
-
   @IsNotEmpty()
   addressText: string;
 
   @IsNotEmpty()
   addressCode: string;
-
-
 
   addInfo: string;
 
@@ -84,7 +79,6 @@ export class HeadlessOrderDto {
   @IsNotEmpty()
   sendMethod: string;
 }
-
 
 // class Address {
 //   name:string

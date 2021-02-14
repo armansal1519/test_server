@@ -231,8 +231,8 @@ update i with {ordered:i.ordered +1} in products
     return zarinpalResp.url;
   }
 
-  async createHeadLessOrder(data){
-    return
+  async createHeadLessOrder(data) {
+    return;
   }
 
   async validateOrder(orderKey) {
@@ -268,7 +268,7 @@ update i with {ordered:i.ordered +1} in products
     product['dimension'] = info.sheetInfo[1];
     product['price'] = info.price * number;
     product['number'] = number;
-    product['originalKey']=product['_key']
+    product['originalKey'] = product['_key'];
     delete product['_id'];
     delete product['_rev'];
     delete product['_key'];

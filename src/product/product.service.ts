@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Arango } from '../arango/Arango';
 import { ProductDto } from './product.dto';
 import { CompanyService } from '../company/company.service';
+import { aql } from 'arangojs';
+import { log } from 'util';
 
 @Injectable()
 export class ProductService {
@@ -14,23 +16,44 @@ export class ProductService {
   }
 
   getProduct(q) {
+    console.log('qqqq', q);
+    let query = 'for i in products ';
+    if (q.sort !== undefined && (q.sort !== 'seen' || q.sort !== 'ordered')) {
+      query += `\nsort i.${q.sort} DESC`;
+    }
+    if (q['status'] == 'instock') {
+      query += `\nfor j in i.doExist
+               filter j.price !=null`;
+    }
 
-    let query='for i in products '
-    if (q.sort!==undefined){
-      query+=`\nsort i.${q.sort} DESC`
+    if (q.limit == true) {
+      query += `\nlimit 15
+`;
     }
-    if (q.limit==true){
-      query+=`\nlimit 15
-`
+    if (q.offset !== undefined) {
+      const offset = parseInt(q.offset);
+      console.log('off', offset);
+      query += `\n limit ${offset},32`;
     }
-    query+='\nreturn i'
+
+    query += '\nreturn i';
     console.log(query);
 
-    return this.arango.executeGetQuery(query)
+    return this.arango.executeGetQuery(query);
   }
 
-  async getFilteredProduct(data) {
-    let filterArr = [];
+  async getLengthOfProduct() {
+    const cursor = await this.arango
+      .getDB()
+      .query(aql`return length(for i in products return i)`);
+    const arr = await cursor.all();
+    return {
+      arrLength: arr[0],
+    };
+  }
+
+  async getFilteredProduct(data, q) {
+    const filterArr = [];
     for (let dataIndex = 0; dataIndex < data.length; dataIndex++) {
       let isOnFilterArr = false;
       for (
@@ -53,7 +76,7 @@ export class ProductService {
     console.log(filterArr);
 
     let finalStr = '';
-    let preQuery=`for u in products\n`
+    let preQuery = `for u in products\n`;
     for (let i = 0; i < filterArr.length; i++) {
       let str = '(';
       for (let j = 0; j < filterArr[i]['menuValue'].length; j++) {
@@ -61,26 +84,26 @@ export class ProductService {
         if (j !== 0) {
           str += ' || ';
         }
-        if (filterArr[i]['menuName']!=='coverSelect' && filterArr[i]['menuName']!=='dimensionsSelect'&&filterArr[i]['menuName']!=='sideSheetType'){
+        if (
+          filterArr[i]['menuName'] !== 'coverSelect' &&
+          filterArr[i]['menuName'] !== 'dimensionsSelect' &&
+          filterArr[i]['menuName'] !== 'sideSheetType'
+        ) {
           str += `u.${filterArr[i]['menuName']} == "${filterArr[i]['menuValue'][j]}"`;
-        }else {
-          if (filterArr[i]['menuName']==='coverSelect'){
-            if (j==0){
-              preQuery+=`for j in u.coverSelect\n`
+        } else {
+          if (filterArr[i]['menuName'] === 'coverSelect') {
+            if (j == 0) {
+              preQuery += `for j in u.coverSelect\n`;
             }
             str += `j == "${filterArr[i]['menuValue'][j]}"`;
-
-          }
-          else if(filterArr[i]['menuName']==='dimensionsSelect'){
-            if (j==0){
-              preQuery+=`for m in u.dimensionsSelect\n`
+          } else if (filterArr[i]['menuName'] === 'dimensionsSelect') {
+            if (j == 0) {
+              preQuery += `for m in u.dimensionsSelect\n`;
             }
             str += `m == "${filterArr[i]['menuValue'][j]}"`;
-
-          }
-          else {
-            if (j==0){
-              preQuery+=`for s in u.sideSheetType\n`
+          } else {
+            if (j == 0) {
+              preQuery += `for s in u.sideSheetType\n`;
             }
             str += `s == "${filterArr[i]['menuValue'][j]}"`;
           }
@@ -91,11 +114,27 @@ export class ProductService {
         str += '&&';
       }
       finalStr += str;
-      console.log(finalStr);
     }
-    console.log(333,preQuery);
-    const query = preQuery+`filter ${finalStr}
-return u`;
+
+    const offset = q['offset'];
+    let query = preQuery;
+
+    if (q['status'] == 'instock') {
+      query += `\nfor j in u.doExist
+               filter j.price !=null`;
+    }
+
+    if (finalStr.length > 1) {
+      query += `\nfilter ${finalStr}`;
+    }
+    if (q.sort !== undefined && (q.sort !== 'seen' || q.sort !== 'ordered')) {
+      query += `\nsort u.${q.sort} DESC`;
+    }
+
+    query =
+      query +
+      `\nlimit ${offset},32 
+       return u`;
     console.log(query);
     try {
       return await this.arango.executeGetQuery(query);
@@ -147,9 +186,7 @@ return NEW`;
     await this.arango.executeEmptyQuery(`for c in company
           filter c._key=="${c['_key']}"
           update c with {sheets: append(c.sheets,"${sheetSelect}",true)} in company
-          return c`)
-
-
+          return c`);
 
     // data['numberInStock']=0
     // data['price']=null

@@ -1,11 +1,23 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class ContactDto {
-  fullName:string
+  fullName: string;
 
-  email:string
+  email: string;
 
-  phoneNumber:string
+  @IsNotEmpty()
+  phoneNumber: string;
 
-  subject:string
+  @IsNotEmpty()
+  subject: string;
 
-  text:string
+  @IsNotEmpty()
+  text: string;
+
+  filePath: string;
+}
+
+export class UpdateContactDto{
+  @IsNotEmpty()
+  isAnswered:boolean
 }

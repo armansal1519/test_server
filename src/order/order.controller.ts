@@ -37,10 +37,9 @@ export class OrderController {
   }
 
   @Post('/headless')
-  createHeadlessOrder(@Body() data:HeadlessOrderDto){
-    return this.orderService.createHeadLessOrder(data)
+  createHeadlessOrder(@Body() data: HeadlessOrderDto) {
+    return this.orderService.createHeadLessOrder(data);
   }
-
 
   @Get('/v/:orderKey')
   paymentVerification(@Param() param) {
