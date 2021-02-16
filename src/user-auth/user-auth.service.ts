@@ -204,7 +204,8 @@ remove t in forgotPassword`;
       // console.log(user);
       const key = user[0]._key;
       const token = this.createAccessToken({ _key: key });
-      const refreshToken = this.createRefreshToken({ _key: key });
+      const refreshToken =await this.createRefreshToken({ _key: key });
+      // console.log('in reset pass',refreshToken);
       delete user[0].hashPass;
       return {
         accessToken: token,
@@ -283,7 +284,7 @@ return u`;
     // const data=await this.arango.executeGetQuery(query)
     try {
       const data = await this.arango.executeGetQuery(query);
-      // console.log(data);
+      console.log('in refresh',data[0].refreshToken);
       return data[0].refreshToken;
     } catch (err) {
       await this.arango.create(this.refreshCol, {
