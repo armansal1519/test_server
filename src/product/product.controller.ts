@@ -54,7 +54,7 @@ export class ProductController {
   @UseGuards(AccessGuard)
   @Access('handler')
   @Put('/:key')
-  put(@Body() data: ProductDto, @Param('key') key) {
+  put(@Body() data, @Param('key') key) {
     return this.productService.updateProduct(data, key);
   }
 

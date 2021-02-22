@@ -244,7 +244,7 @@ update i with {ordered:i.ordered +1} in products
     };
     const resp = await this.zarinpal.paymentVerification(data);
     order['refId'] = resp.RefID;
-    order['status'] = 'valid';
+    order['status'] = 'waiting';
     // console.log(3333,user.orderHistory);
     this.arango.update(this.orderCol, order, order._key);
 

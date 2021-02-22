@@ -47,7 +47,7 @@ export class OrderController {
   }
 
   @Put(':key')
-  put(@Body() data: OrderDto, @Param('key') key) {
+  put(@Body() data, @Param('key') key) {
     return this.orderService.updateOrder(key, data);
   }
 
