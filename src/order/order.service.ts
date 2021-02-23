@@ -34,13 +34,13 @@ export class OrderService {
   }
 
   async getAllOrder() {
-    // const query = aql`for i in users
-    //   FOR v, e, p IN 1..1 any i GRAPH "user_order_product"
-    //   return {"order":e,"user":i,"product":v}
-    //    `;
-    // return this.arango.executeGetQuery(query);
+    const query = aql`for i in orders
+sort i.dateOfOrder desc
+return i
+       `;
+    return this.arango.executeGetQuery(query);
 
-    return this.arango.getAll(this.orderCol);
+    // return this.arango.getAll(this.orderCol);
   }
 
   async getAllOrderOfOneUser(key) {
