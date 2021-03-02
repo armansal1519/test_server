@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Post } from '@nestjs/common';
 import { CartService } from './cart.service';
+import { UpdateCartDto } from './cart.dto';
 
 @Controller('cart')
 export class CartController {
@@ -8,6 +9,10 @@ export class CartController {
   @Post()
   addToCart(@Body() data) {
     return this.cartService.addToCart(data);
+  }
+  @Post('/update')
+  updateToCart(@Body() data:UpdateCartDto) {
+    return this.cartService.updateCart(data);
   }
 
   @Post('/delete')

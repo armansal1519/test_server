@@ -14,7 +14,8 @@ export class CartService {
 
   async addToCart(data: AddCartDto) {
     const { productKey, userKey, index } = data;
-    let product = await this.productService.getProductByKey(productKey);
+    console.log("add to cart data",data);
+    const product = await this.productService.getProductByKey(productKey);
 
     data['product'] = product[0];
     // console.log(data);
@@ -40,6 +41,25 @@ export class CartService {
       }
     }
     return this.userService.updateUser(user, userKey);
+  }
+
+  async updateCart(data){
+    const {  userKey, index , number} = data;
+    console.log("add to cart data",data);
+    let user = await this.userService.getUserByKey(userKey);
+    user = user[0];
+    // console.log(111,product[0]['doExist'][index]['price']);
+
+    if (user['cart'] === undefined ) {
+      throw new ConflictException('cart is undefined');
+    }
+    if (user['cart'][index]===undefined){
+      throw new ConflictException('cart[index] is undefined');
+    }
+    user['cart'][index]['number']=parseInt(number)
+
+    return this.userService.updateUser(user, userKey);
+
   }
 
   async removeFromCart(data: RemoveCartDto) {

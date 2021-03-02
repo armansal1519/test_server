@@ -23,8 +23,8 @@ export class ContactController {
   }
 
   @Patch('/:key')
-  update(@Body() data:UpdateContactDto,@Param('key')key){
-    console.log(key,data);
-    return this.contactService.updateContact(key,data)
+  update(@Body() data: UpdateContactDto, @Param('key') key) {
+    console.log(key, data);
+    return this.contactService.updateContact(key, data);
   }
 }

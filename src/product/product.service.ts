@@ -26,7 +26,7 @@ export class ProductService {
                filter j.price !=null`;
     }
 
-    if (q.limit ) {
+    if (q.limit) {
       query += `\nlimit 15
 `;
     }

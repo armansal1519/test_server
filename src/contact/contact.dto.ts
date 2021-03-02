@@ -17,7 +17,7 @@ export class ContactDto {
   filePath: string;
 }
 
-export class UpdateContactDto{
+export class UpdateContactDto {
   @IsNotEmpty()
-  isAnswered:boolean
+  isAnswered: boolean;
 }

@@ -190,7 +190,7 @@ update i with {ordered:i.ordered +1} in products
     //   user['orderHistory'] = [];
     // }
     // const callBackUrl = `https://bamachoob.com/order/v/${user.orderHistory.length}/${userKey}`;
-    const callBackUrl = `http://localhost:8080/order/v/${order._key}`;
+    const callBackUrl = `https://bamachoub.com/order/v/${order._key}`;
     const desc = `خرید از باماچوب`;
 
     const zarinpalData = {

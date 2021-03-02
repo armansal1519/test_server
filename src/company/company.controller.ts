@@ -1,5 +1,6 @@
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,6 +9,7 @@ import {
   Put,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CompantDto } from './compantDto';
@@ -15,6 +17,7 @@ import { Access } from '../utils/auth/access.decorator';
 import { AccessGuard } from '../user-auth/access.guard';
 
 @Controller('company')
+// @UseInterceptors(CacheInterceptor)
 export class CompanyController {
   constructor(private companyService: CompanyService) {}
 

@@ -9,9 +9,9 @@ export class ContactService {
   }
 
   async getContact() {
-    const q=`for i in contact
+    const q = `for i in contact
                 sort i.createdAt desc
-                return i`
+                return i`;
     return await this.arango.executeGetQuery(q);
   }
 
@@ -21,12 +21,12 @@ export class ContactService {
 
   async createContact(data) {
     data['createdAt'] = new Date();
-    data['isAnswered']=false
+    data['isAnswered'] = false;
     return await this.arango.create(this.contactCol, data);
   }
 
-  async updateContact(key,data){
-    data['updateAt']=new Date()
-   return await this.arango.update(this.contactCol,data,key)
+  async updateContact(key, data) {
+    data['updateAt'] = new Date();
+    return await this.arango.update(this.contactCol, data, key);
   }
 }

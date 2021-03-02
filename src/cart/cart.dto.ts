@@ -14,6 +14,17 @@ export class AddCartDto {
   index: number;
 }
 
+export class UpdateCartDto {
+  @IsNotEmpty()
+  userKey: string;
+
+  @IsNotEmpty()
+  number: number;
+
+  @IsNotEmpty()
+  index: number;
+}
+
 export class RemoveCartDto {
   @IsNotEmpty()
   userKey: string;
