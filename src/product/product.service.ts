@@ -52,6 +52,15 @@ export class ProductService {
     };
   }
 
+  async search(searchText){
+    const query=`for i in productSearch
+search like(i.colorCode,"%${searchText}%" ) || like(i.color,"%${searchText}%") || like(i.company,"%${searchText}%") || like(i.sheetSelect,"%${searchText}%") || like(i.thicknessSelect,"%${searchText}%") 
+limit 10
+return i`
+    console.log(query);
+    return  await this.arango.executeGetQuery(query)
+  }
+
   async getFilteredProduct(data, q) {
     const filterArr = [];
     for (let dataIndex = 0; dataIndex < data.length; dataIndex++) {

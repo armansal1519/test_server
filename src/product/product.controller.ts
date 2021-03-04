@@ -30,9 +30,10 @@ export class ProductController {
     return this.productService.getFilteredProduct(data, q);
   }
 
-  @Get('/len')
-  getLength() {
-    return this.productService.getLengthOfProduct();
+  @Get('/search')
+  getLength( @Query() q) {
+    const {search}=q
+    return this.productService.search(search);
   }
   @Get('/:key')
   getByKey(@Param('key') key) {
