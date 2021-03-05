@@ -79,8 +79,9 @@ return i
     // return this.arango.getByKey(this.orderCol, key);
   }
 
-  async createOrder(data) {
+  async createOrder(data,q) {
     console.log(data);
+    const{device,baseURL}=q
     let totalCost = 0;
     // const metaArr = [];
     const {
@@ -146,52 +147,17 @@ update i with {ordered:i.ordered +1} in products
 
       // metaArr.push(meta._key);
     }
-    // const temp = productId.split('/');
-    // const productKey = temp[1];
-    // // console.log(data ,productKey); ok
-    // data['status'] = 'notValid';
-    // const orderedProduct = await this.productService.getProductByKey(
-    //   productKey,
-    // );
-    // // console.log(orderedProduct[0].doExist) ok;
-    // if (
-    //   orderedProduct[0].doExist[data.index].numberInStock === 0 ||
-    //   orderedProduct[0].doExist[data.index].numberInStock == null ||
-    //   orderedProduct[0].doExist[data.index].numberInStock < data.number
-    // ) {
-    //   throw new ConflictException(
-    //     'product number in stock is lower than request',
-    //   );
-    // }
-    // if (!orderedProduct[0].doExist[data.index].price) {
-    //   throw new ConflictException('product price have problem');
-    // }
-    // const amount = orderedProduct[0].doExist[data.index].price * data.number;
-    // data['amount'] = amount;
-    //
-    // const productHistoryId=await this.createHistoryProduct(productKey,data.index,data.number)
-    // delete data['userId']
-    // delete data['productId']
-    //
-    //
-    // const meta = await this.arango.addEdge(
-    //   this.orderCol,
-    //   userId,
-    //   productHistoryId,
-    //   data,
-    // );
-    // console.log(3,meta);
-    // const temp = userId.split('/');
-    // const userKey = temp[1];
-    // let user = await this.arango.getByKey(this.userCol, userKey);
-    // user = user[0];
 
-    // if (user.orderHistory === undefined) {
-    //   user['orderHistory'] = [];
-    // }
-    // const callBackUrl = `https://bamachoob.com/order/v/${user.orderHistory.length}/${userKey}`;
-    const callBackUrl = `https://bamachoub.com/order/v/${order._key}`;
+    let callBackUrl = `https://bamachoub.com/order/v/${order._key}`;
     const desc = `خرید از باماچوب`;
+    //for mobile deep link
+
+    if (device==='mobile'){
+      baseURL.replace(":orderKey", order._key)
+      callBackUrl=baseURL
+    }
+
+
 
     const zarinpalData = {
       Amount: totalCost, // In Tomans

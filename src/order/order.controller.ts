@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, Query,
   UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
@@ -32,8 +32,8 @@ export class OrderController {
   }
 
   @Post()
-  post(@Body() data: OrderDto[]) {
-    return this.orderService.createOrder(data);
+  post(@Body() data: OrderDto[],@Query()q) {
+    return this.orderService.createOrder(data,q);
   }
 
   @Post('/headless')
