@@ -153,7 +153,7 @@ update i with {ordered:i.ordered +1} in products
     //for mobile deep link
 
     if (device==='mobile'){
-      baseURL.replace(":orderKey", order._key)
+      callBackUrl=`bamachoub://screens/after-pay/${order._key}/`
       callBackUrl=baseURL
     }
 
