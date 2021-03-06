@@ -154,7 +154,6 @@ update i with {ordered:i.ordered +1} in products
 
     if (device==='mobile'){
       callBackUrl=`bamachoub://screens/after-pay/${order._key}/`
-      callBackUrl=baseURL
     }
 
 
