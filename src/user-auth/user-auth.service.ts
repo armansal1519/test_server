@@ -152,13 +152,17 @@ remove t in tempUsers`;
     const match = await argon2.verify(user[0].hashPass, pass);
     // const match=pass==user[0].pass
     // console.log('match', match);
+
+
+
     if (user && match) {
       const { pass, ...u } = user[0];
 
       // console.log('in if');
       return u;
     }
-    return null;
+    // return null;
+    throw new UnauthorizedException('wrong username or password')
   }
 
   async forgotPassword(phoneNumber) {
