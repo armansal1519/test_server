@@ -1,8 +1,8 @@
 # compiled output
 /dist
 /node_modules
-# /file
-# /images
+/file
+/images
 
 # Logs
 logs

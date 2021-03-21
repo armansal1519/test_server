@@ -10,7 +10,7 @@ export class Arango {
 
   constructor() {
     this._db = new Database({
-      url: 'http://185.97.117.171:8529',
+      url: 'http://45.159.115.84/:8529',
     });
     this._db.useDatabase('bamachoob-v1');
     this._db.useBasicAuth('root', 'datafor?me');
